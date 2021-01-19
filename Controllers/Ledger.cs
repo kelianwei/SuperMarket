@@ -16,10 +16,17 @@ namespace SuperMarket.Controllers
         // GET: api/<Ledger>
         private decimal[] getRandomArray(decimal total, int pieceNumer, decimal leastPercet)
         {
+            decimal total100 = total * 100;
+            decimal perAtLeast =Math.Round( total100 * leastPercet / 100/pieceNumer,0);
+            decimal avgRemain = total100 - perAtLeast*pieceNumer;
+
             Random random = new Random(new Guid().GetHashCode());
             decimal[] randomArray = new decimal[pieceNumer].Select(x => x = random.Next()).ToArray();
-            decimal perAtLeast = total * (leastPercet / 100) / pieceNumer;
-            decimal avgRemain = total * ((100 - leastPercet) / 100);
+            Array.Sort(randomArray);  
+           
+
+
+
             return new decimal[pieceNumer].Select((x, index) => x = avgRemain * (randomArray[index] / randomArray.Sum()) + perAtLeast).ToArray();
         }
 
@@ -34,9 +41,6 @@ namespace SuperMarket.Controllers
 
             NPOI.SS.UserModel.ISheet tempSheet = new XSSFWorkbook(file).GetSheet("data");
             XSSFWorkbook book = new XSSFWorkbook(); // 新建xls工作
-
-            decimal tt = 0;
-            decimal ts = 0;
             for (int i = 0; i < dayNumber; i++)
             {
                 string sheetName = string.Format("{0}月{1}日", month, i + 1);
@@ -48,19 +52,20 @@ namespace SuperMarket.Controllers
                 for (int j = 0; j < 6; j++)
                 {
                     currentSheet.GetRow(4 * (j + 1)).GetCell(4).SetCellValue(cashArray[i * 6 + j].ToString("C"));
-                 
+
                     currentSheet.GetRow(4 * (j + 1) + 2).GetCell(4).SetCellValue(unionPayArray[i * 6 + j].ToString("C"));
-                   
+
                 }
             }
 
-            using (FileStream fileStream = new FileStream(string.Format("/OutPut/家联超市{0}年{1}月日报.xlsx", year, month), FileMode.Create)) {
+            using (FileStream fileStream = new FileStream(string.Format("/OutPut/家联超市{0}年{1}月日报.xlsx", year, month), FileMode.Create))
+            {
                 book.Write(fileStream); // 写入到本地
-            } ;
-    
-           
-            
-            return JsonConvert.SerializeObject(new { cash=cashArray,unionPay=unionPayArray});
+            };
+
+
+
+            return JsonConvert.SerializeObject(new { cash = cashArray, unionPay = unionPayArray });
 
         }
 
