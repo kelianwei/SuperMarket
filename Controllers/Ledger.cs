@@ -18,16 +18,20 @@ namespace SuperMarket.Controllers
         {
             decimal total100 = total * 100;
             decimal perAtLeast =Math.Round( total100 * leastPercet / 100/pieceNumer,0);
-            decimal avgRemain = total100 - perAtLeast*pieceNumer;
+            decimal Remain = total100 - perAtLeast*pieceNumer;
 
             Random random = new Random(new Guid().GetHashCode());
-            decimal[] randomArray = new decimal[pieceNumer].Select(x => x = random.Next()).ToArray();
-            Array.Sort(randomArray);  
-           
+            decimal[] randomArray = new decimal[pieceNumer-1].Select(x => x = random.Next((int)Remain)).ToArray();
+            Array.Sort(randomArray);
 
+            
+             
 
-
-            return new decimal[pieceNumer].Select((x, index) => x = avgRemain * (randomArray[index] / randomArray.Sum()) + perAtLeast).ToArray();
+            return new decimal[pieceNumer].Select((x,index)=> {
+                var pre = index == 0 ? 0 : randomArray[index - 1];
+                var current = index == pieceNumer - 1 ? Remain : randomArray[index];
+                return (current-pre+ perAtLeast) / 100;
+            }).ToArray();
         }
 
         [HttpPost("file")]
@@ -51,14 +55,13 @@ namespace SuperMarket.Controllers
 
                 for (int j = 0; j < 6; j++)
                 {
-                    currentSheet.GetRow(4 * (j + 1)).GetCell(4).SetCellValue(cashArray[i * 6 + j].ToString("C"));
-
-                    currentSheet.GetRow(4 * (j + 1) + 2).GetCell(4).SetCellValue(unionPayArray[i * 6 + j].ToString("C"));
+                    currentSheet.GetRow(4 * j ).GetCell(3).SetCellValue(cashArray[i * 6 + j].ToString());
+                    currentSheet.GetRow(4 * j + 2).GetCell(3).SetCellValue(unionPayArray[i * 6 + j].ToString());
 
                 }
             }
 
-            using (FileStream fileStream = new FileStream(string.Format("/OutPut/家联超市{0}年{1}月日报.xlsx", year, month), FileMode.Create))
+            using (FileStream fileStream = new FileStream(string.Format("OutPut/家联超市{0}年{1}月日报.xlsx", year, month), FileMode.Create))
             {
                 book.Write(fileStream); // 写入到本地
             };
