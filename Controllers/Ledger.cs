@@ -41,11 +41,15 @@ namespace SuperMarket.Controllers
                 string sheetName = string.Format("{0}月{1}日", month, i + 1);
                 NPOIHelper.CrossCloneSheet(tempSheet, book, sheetName);
                 NPOI.SS.UserModel.ISheet currentSheet = book.GetSheet(sheetName); // 获取工作表sheet1的索引
+                decimal sum = 0;
                 for (int j = 0; j < 6; j++)
                 {
-                    currentSheet.GetRow(4 * j).GetCell(3).SetCellValue(cashArray[i * 6 + j].ToString());
-                    currentSheet.GetRow(4 * j + 2).GetCell(3).SetCellValue(unionPayArray[i * 6 + j].ToString());
+                    sum += cashArray[i * 6 + j];
+                    sum += unionPayArray[i * 6 + j];
+                    currentSheet.GetRow(4 * j + 3).GetCell(3).SetCellValue(cashArray[i * 6 + j].ToString());
+                    currentSheet.GetRow(4 * j + 5).GetCell(3).SetCellValue(unionPayArray[i * 6 + j].ToString());
                 }
+                currentSheet.GetRow(26).GetCell(3).SetCellValue(sum.ToString());
             }
             using (FileStream fileStream = new FileStream(string.Format("OutPut/家联超市{0}年{1}月日报.xlsx", year, month), FileMode.Create))
             {
