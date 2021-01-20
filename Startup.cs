@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 namespace SuperMarket
 {
@@ -19,7 +18,7 @@ namespace SuperMarket
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {  Title="家联超市", Description="输入日期和金额一键生成随机日报。" });
+                c.SwaggerDoc("v1", new OpenApiInfo {  Title="瓒呭競", Description="" });
             });
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

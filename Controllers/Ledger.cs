@@ -52,7 +52,7 @@ namespace SuperMarket.Controllers
                 currentSheet.GetRow(1).GetCell(0).SetCellValue(string.Format("{0}年{1}月{2}日", year, month, i + 1));
                 currentSheet.GetRow(26).GetCell(3).SetCellValue(sum.ToString());
             }
-            string path = string.Format("{0}\\OutPut\\", Directory.GetCurrentDirectory());
+            string path = string.Format("{0}/OutPut/", Directory.GetCurrentDirectory());
             string fileName = string.Format("家联超市{0}年{1}月日报.xlsx", year, month);
             using (FileStream fileStream = new FileStream(path + fileName, FileMode.Create))
             {
